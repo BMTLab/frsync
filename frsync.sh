@@ -487,7 +487,7 @@ function __frsync_build_rsync_options() {
   fi
 
   if [[ $should_enable_trust_sender == true ]]; then
-    # Trust sender's metadata (owner, group, etc.) — unsafe on untrusted hosts
+    # Trust sender's metadata (owner, group, etc.): unsafe on untrusted hosts
     _final_rsync_options+=('--trust-sender')
   fi
 }
