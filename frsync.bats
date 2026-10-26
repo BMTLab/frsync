@@ -41,6 +41,7 @@ setup() {
   function rsync() {
     echo "rsync called with args: $*"
   }
+
   export -f rsync
 
   ## Act
@@ -58,6 +59,7 @@ setup() {
   function rsync() {
     echo "rsync called with args: $*"
   }
+
   export -f rsync
 
   ## Act

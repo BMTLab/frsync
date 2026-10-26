@@ -627,10 +627,12 @@ function frsync() {
   # Ensure getopts starts from first arg on every call
   local OPTIND=1
   local current_option
+
   while getopts ':hcwnBR:i:mdu' current_option; do
     case "$current_option" in
       h)
         __frsync_usage
+
         return 0
         ;;
       c)
@@ -765,6 +767,7 @@ function frsync() {
 if [[ $FRSYNC_SCRIPT_SOURCED == false ]]; then
   frsync "$@"
   exit_code=$?
+
   exit "$exit_code"
 fi
 ### End
