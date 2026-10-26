@@ -1,0 +1,25 @@
+# tests/.shellcheckrc
+#
+# ShellCheck reads only the nearest .shellcheckrc,
+# so this file holds every check of the tests
+# and the exceptions that they need by design.
+
+shell=bash
+external-sources=true
+source-path=SCRIPTDIR
+enable=avoid-nullary-conditions
+enable=check-unassigned-uppercase
+enable=deprecate-which
+enable=require-double-brackets
+enable=require-variable-braces
+enable=quote-safe-variables
+# check-extra-masked-returns (SC2312): a value from $(...) is assigned alone,
+# where a failure of its command shows.
+enable=check-extra-masked-returns
+
+# SC2030, SC2031: ShellCheck models each @test as a subshell
+# and flags the output and the status that bats' `run` sets.
+disable=SC2030,SC2031
+
+# SC2154: bats defines output, status and BATS_* at run time.
+disable=SC2154

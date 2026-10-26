@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Stand in for a program, and print each argument on a line of its own.
+#
+# A test puts it in place of rsync and ssh,
+# and reads in the output of frsync what frsync handed on.
+
+set -o errexit -o nounset -o pipefail
+
+#######################################
+# Print each argument on a line of its own.
+#
+# Arguments:
+#   $@: The arguments that frsync handed on.
+#
+# Outputs:
+#   The arguments, one per line, on stdout.
+#######################################
+function main() {
+  printf '%s\n' "$@"
+}
+
+main "$@"
+
+### End
