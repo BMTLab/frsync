@@ -7,6 +7,12 @@
 shell=bash
 external-sources=true
 source-path=SCRIPTDIR
+# A test sources support/test-helper.bash,
+# which sources frsync.sh as ../../frsync.sh.
+# Inside the module, SCRIPTDIR stays the folder of the test file,
+# so ShellCheck finds frsync.sh only through support/;
+# without this line, it skips frsync.sh and says nothing.
+source-path=SCRIPTDIR/support
 enable=avoid-nullary-conditions
 enable=check-unassigned-uppercase
 enable=deprecate-which
