@@ -1,6 +1,7 @@
 # Contributing to frsync
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+We love your input!
+We want to make contributing to this project as easy and transparent as possible, whether it's:
 
 - Reporting a bug
 - Discussing the current state of the code
@@ -41,19 +42,20 @@ by [opening a new issue](https://github.com/BMTLab/frsync/issues/new); it's that
 
 - A quick summary and/or background
 - Steps to reproduce
-    - Be specific!
-    - Give sample code if you can.
+  - Be specific!
+  - Give sample code if you can.
 - What you expected would happen
 - What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
+- Notes (possibly including why you think this might be happening,
+  or stuff you tried that didn't work)
 
 People *love* thorough bug reports.
 
 ## Use a Consistent Coding Style
 
-* You can use any editor you like but ensure your code conforms to the project's coding conventions
+- You can use any editor you like but ensure your code conforms to the project's coding conventions
 (e.g., indentation,comments, naming conventions).
-* Project owner uses _JetBrains PyCharm_.
+- Project owner uses *JetBrains PyCharm*.
 
 ## License
 
