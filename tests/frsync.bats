@@ -87,6 +87,46 @@ function setup() {
   assert_output_contains ' -i /path/to/key '
 }
 
+@test "a call in a pipe leaves the progress line of rsync out" {
+  # Arrange: run hands frsync a pipe as its stdout, where a redrawn line is noise.
+
+  # Act
+  run frsync 'source' 'target'
+
+  # Assert
+  assert_success
+  assert_output_lacks '--info=progress2'
+}
+
+@test "a call on a terminal hands the progress line on to rsync" {
+  # Arrange: the script of util-linux gives frsync a terminal as its stdout.
+  local script_version=''
+  # Without script, the call fails, and the test skips below.
+  script_version="$(script --version 2>/dev/null)" || true
+
+  if [[ "${script_version}" != *'util-linux'* ]]; then
+    skip 'needs the script of util-linux'
+  fi
+
+  # Act
+  run script -qec "bash ${PROGRAM@Q} source target" /dev/null
+
+  # Assert
+  assert_success
+  assert_output_contains '--info=progress2'
+}
+
+@test "-R --info=progress2 keeps the progress line in a pipe" {
+  # Arrange: the option asks for the line, as for a log that a person reads in a terminal.
+
+  # Act
+  run frsync -R '--info=progress2' 'source' 'target'
+
+  # Assert
+  assert_success
+  assert_output_contains $'\n--info=progress2\n'
+}
+
 # endregion The command of rsync
 
 ### End

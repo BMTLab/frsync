@@ -137,6 +137,23 @@ function assert_output_contains() {
 }
 
 #######################################
+# Assert that the output of the last run does not contain a fragment.
+#
+# Arguments:
+#   1: The fragment, which may span lines.
+#
+# Globals:
+#   output: The output of the last run, its stderr included.
+#######################################
+function assert_output_lacks() {
+  local -r fragment="$1"
+
+  if [[ "${output}" == *"${fragment}"* ]]; then
+    fail_with_report "output holds: ${fragment}"
+  fi
+}
+
+#######################################
 # Report a failed assertion with the whole run, and fail the test.
 #
 # Arguments:

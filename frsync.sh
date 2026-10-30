@@ -20,7 +20,7 @@
 #   Features:
 #     - Sensible, feature-rich default rsync option set
 #       (archive, hard-links, ACLs, xattrs, numeric-ids, human-readable,
-#        progress display, etc.).
+#        progress display on a terminal, etc.).
 #     - Optional rsync compression (zstd / lz4 / zlib, auto-detected).
 #     - Custom SSH private key selection.
 #     - SSH connection multiplexing (ControlMaster/ControlPath) by default.
@@ -86,6 +86,9 @@
 #     (compression, delete, whole-file, dry-run, trust-sender) are added.
 #     This string is tokenized by the shell (word-splitting),
 #     so it may contain multiple options separated by spaces/newlines.
+#     frsync leaves --info=progress2 out when stdout is not a terminal,
+#     since rsync redraws that line with \r; -R --info=progress2 keeps it.
+#     Other progress options of your own, such as --progress or -P, stay.
 #
 #     Default (pretty-printed here, but stored as a single string):
 #       --archive
@@ -417,7 +420,18 @@ function __frsync_build_rsync_options() {
     # Using default IFS to split base options (expected behavior)
     # shellcheck disable=SC2206
     local -a _frsync_base_tokens=($FRSYNC_RSYNC_BASE_OPTS)
-    _final_rsync_options+=("${_frsync_base_tokens[@]}")
+    local base_token
+
+    for base_token in "${_frsync_base_tokens[@]}"; do
+      # rsync redraws its progress line with \r, which only a terminal
+      # shows as one line: a pipe or a log would get every redraw.
+      # -R --info=progress2 still asks for the line anywhere.
+      if [[ "${base_token}" == '--info=progress2' && ! -t 1 ]]; then
+        continue
+      fi
+
+      _final_rsync_options+=("${base_token}")
+    done
   fi
 
   # Raw rsync options provided via -R (each element is passed as-is).

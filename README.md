@@ -19,7 +19,7 @@ and an easy way to inspect and override behavior.
 
     * Archive-ish behavior, preserving most metadata.
     * Preserves hard links, ACLs, extended attributes, and numeric IDs.
-    * Uses in-place partial transfers with a progress display.
+    * Uses in-place partial transfers with a progress display on a terminal.
     * Ready for day-to-day development, backup, and deployment scenarios.
 
 * **Modern compression support**
@@ -84,6 +84,10 @@ Out of the box (without overrides) it expands to something equivalent to the fol
   --info=progress2 \
   --verbose
 ```
+
+rsync redraws its `--info=progress2` line with `\r`, which only a terminal shows as one line.
+So when stdout is not a terminal, such as a pipe or a log file, `frsync` leaves that option out;
+`-R --info=progress2` keeps it anyway.
 
 On the SSH side, it builds a command like:
 
@@ -276,6 +280,9 @@ you will see a snapshot of the **current effective values**.
 
     * Internally this is just a string that the shell splits into tokens.
     * You may set it to an empty string to start from a minimal base and build everything via `-R` and other knobs.
+    * `frsync` leaves `--info=progress2` out when stdout is not a terminal;
+      `-R --info=progress2` keeps it.
+      Other progress options of your own, such as `--progress` or `-P`, stay.
 
 ### `FRSYNC_SSH_BIN`
 
