@@ -28,27 +28,50 @@ function setup() {
 
 # region Usage and failures
 
-@test "-h prints the usage and succeeds" {
-  # Arrange: setup sources frsync.sh, which is all that -h needs.
+#######################################
+# Check that an option for help prints the usage to stdout, and nothing to stderr.
+#
+# Arguments:
+#   1: The option, -h or --help.
+#######################################
+function an_option_for_help_prints_the_usage() {
+  # Arrange: setup sources frsync.sh, which is all that help needs.
 
   # Act
-  run frsync -h
+  run --separate-stderr frsync "$1"
 
   # Assert
   assert_success
   assert_output_contains $'Usage:\n  frsync [-h]'
+  assert_stderr_empty
 }
 
-@test "an unknown option fails with FRSYNC_ERR_INVALID_OPTIONS and names the option" {
-  # Arrange: frsync has no option -z.
+bats_test_function --description '-h prints the usage to stdout and succeeds' \
+  -- an_option_for_help_prints_the_usage '-h'
+bats_test_function --description '--help prints the usage to stdout and succeeds' \
+  -- an_option_for_help_prints_the_usage '--help'
+
+#######################################
+# Check that an unknown option fails with FRSYNC_ERR_INVALID_OPTIONS and names the option.
+#
+# Arguments:
+#   1: The option, short or long, which frsync does not have.
+#######################################
+function an_unknown_option_fails_and_names_it() {
+  # Arrange: frsync has no option -z and no option --bogus.
 
   # Act
-  run frsync -z
+  run frsync "$1"
 
   # Assert
   assert_failure "${FRSYNC_ERR_INVALID_OPTIONS}"
-  assert_output_contains 'Error: Invalid option: -z.'
+  assert_output_contains "Error: Invalid option: $1."
 }
+
+bats_test_function --description 'an unknown option fails with FRSYNC_ERR_INVALID_OPTIONS and names it' \
+  -- an_unknown_option_fails_and_names_it '-z'
+bats_test_function --description 'an unknown long option fails with FRSYNC_ERR_INVALID_OPTIONS and names it' \
+  -- an_unknown_option_fails_and_names_it '--bogus'
 
 @test "a call without a source and a destination fails with FRSYNC_ERR_PATHS_NOT_SPECIFIED" {
   # Arrange: the call names no path.

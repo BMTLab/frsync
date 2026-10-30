@@ -185,7 +185,7 @@ frsync [-h] [-c] [-w] [-n] [-B] [-R rsync_opt] \
 
 ### Options
 
-* `-h`
+* `-h`, `--help`
   Show help and exit. The help output includes a snapshot of the current effective `FRSYNC_*` environment.
 
 * `-c`

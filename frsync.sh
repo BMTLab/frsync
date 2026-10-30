@@ -56,7 +56,8 @@
 #     frsync user@host:/remote/data ./local_dir
 #
 # Options:
-#   -h      Show help and exit.
+#   -h, --help
+#           Show help and exit.
 #   -c      Enable rsync compression (zstd/lz4/zlib depending on support).
 #   -w      Use --whole-file (no delta algorithm, good on fast links).
 #   -n      Dry-run: add --dry-run and print the final rsync command
@@ -235,7 +236,8 @@ Usage:
     <source_path1> [<source_path2> ...] <destination_path>
 
 Options:
-  -h  Show this help message (including current FRSYNC_* environment) and exit.
+  -h, --help
+      Show this help message (including current FRSYNC_* environment) and exit.
   -c  Enable rsync compression (algorithm tunable via FRSYNC_COMPRESSION_CHOICE).
   -w  Use --whole-file (no delta algorithm, better on fast links).
   -n  Dry-run: add --dry-run and print the final rsync command.
@@ -602,7 +604,7 @@ function __frsync_build_ssh_options() {
 #   All FRSYNC_* environment-backed variables.
 #
 # Arguments (CLI):
-#   -h: Displays help message and exits.
+#   -h, --help: Displays help message and exits.
 #   -c: Enables rsync compression (choice controlled by FRSYNC_COMPRESSION_CHOICE).
 #   -w: Enables --whole-file (disable delta algorithm; better on fast links).
 #   -n: Enables --dry-run and prints final rsync command.
@@ -642,9 +644,21 @@ function frsync() {
   local OPTIND=1
   local current_option
 
-  while getopts ':hcwnBR:i:mdu' current_option; do
+  # The option -: lets getopts read --help, as the option - with the value help.
+  while getopts ':hcwnBR:i:mdu-:' current_option; do
     case "$current_option" in
       h)
+        __frsync_usage
+
+        return 0
+        ;;
+      -)
+        if [[ "${OPTARG}" != 'help' ]]; then
+          __frsync_error "Invalid option: --${OPTARG}" \
+            "${FRSYNC_ERR_INVALID_OPTIONS}" \
+            || return $?
+        fi
+
         __frsync_usage
 
         return 0

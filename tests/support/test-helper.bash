@@ -137,6 +137,18 @@ function assert_output_contains() {
 }
 
 #######################################
+# Assert that the last run, under run --separate-stderr, wrote nothing to stderr.
+#
+# Globals:
+#   stderr: The stderr of the last run.
+#######################################
+function assert_stderr_empty() {
+  if [[ -n "${stderr}" ]]; then
+    fail_with_report "stderr holds: ${stderr}"
+  fi
+}
+
+#######################################
 # Assert that the output of the last run does not contain a fragment.
 #
 # Arguments:
